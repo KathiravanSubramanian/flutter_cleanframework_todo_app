@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:clean_framework/clean_framework.dart';
 
 enum TodoFormTags { title, description, isCompleted }
@@ -11,6 +10,8 @@ class TodoFormEntity extends Entity {
   final String title;
   final String description;
   final bool isCompleted;
+  final String createdAt;
+  final String updatedAt;
   final FormController formController;
 
   const TodoFormEntity({
@@ -19,6 +20,8 @@ class TodoFormEntity extends Entity {
     this.title = '',
     this.description = '',
     this.isCompleted = false,
+    this.createdAt = '',
+    this.updatedAt = '',
     required this.formController,
   });
 
@@ -29,6 +32,8 @@ class TodoFormEntity extends Entity {
         title,
         description,
         isCompleted,
+        createdAt,
+        updatedAt,
         formController,
       ];
 
@@ -38,6 +43,8 @@ class TodoFormEntity extends Entity {
     String? title,
     String? description,
     bool? isCompleted,
+    String? createdAt,
+    String? updatedAt,
     TodoFormStatus? status,
     FormController? formController,
   }) {
@@ -46,6 +53,8 @@ class TodoFormEntity extends Entity {
       title: title ?? this.title,
       description: description ?? this.description,
       isCompleted: isCompleted ?? this.isCompleted,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       status: status ?? this.status,
       formController: formController ?? this.formController,
     );

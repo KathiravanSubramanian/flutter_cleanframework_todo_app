@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'src/core/core.dart';
 import 'src/features/features.dart';
+import 'src/features/todoForm/providers/todo_form_external_interface_providers.dart';
+import 'src/features/todoList/providers/todo_list_external_interface_providers.dart';
 import 'src/routes/routes.dart';
 
 void main() {
@@ -20,13 +22,18 @@ class App extends StatelessWidget {
 
     return AppScope(
       child: AppProviderScope(
-        externalInterfaceProviders: const [],
+        externalInterfaceProviders: [
+          createExternalInterfaceProvider,
+          updateExternalInterfaceProvider,
+          readExternalInterfaceProvider,
+          deleteExternalInterfaceProvider,
+        ],
         child: AppRouterScope(
           create: ProjectRouter.new,
           builder: (context) {
             return MaterialApp.router(
               routerConfig: context.router.config,
-              title: AppStrings.appName,
+              title: StringProvider.appName,
               theme: theme.buildLightTheme(),
               darkTheme: theme.buildDarkTheme(),
               themeMode: ThemeMode.system,

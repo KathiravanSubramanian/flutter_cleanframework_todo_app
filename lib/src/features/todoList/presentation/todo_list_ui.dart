@@ -55,7 +55,7 @@ class TodoListUI extends UI<TodoListViewModel> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset(AppAssets.empty),
+            Lottie.asset(AssetProvider.empty),
             const SizedBox(height: 20),
             Text('Things look empty here. Tap + to add',
                 style: Theme.of(context).textTheme.titleMedium),

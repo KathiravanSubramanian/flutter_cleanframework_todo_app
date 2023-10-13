@@ -1,4 +1,0 @@
-class AppAssets {
-  static const _base = 'assets/animations';
-  static const empty = '$_base/empty.json';
-}

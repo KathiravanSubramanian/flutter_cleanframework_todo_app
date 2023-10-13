@@ -24,7 +24,7 @@ class SplashUI extends UI<SplashViewModel> {
               Padding(
                 padding: const EdgeInsets.all(26.0),
                 child: Text(
-                  AppStrings.appName,
+                  StringProvider.appName,
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
               ),

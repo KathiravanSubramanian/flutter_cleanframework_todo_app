@@ -1,5 +1,7 @@
 import 'package:clean_framework/clean_framework.dart';
 
+import '../gateway/todo_delete_gateway.dart';
+import '../gateway/todo_read_gateway.dart';
 import '../model/todo_model.dart';
 import 'todo_list_entity.dart';
 import 'todo_list_ui_output.dart';
@@ -19,26 +21,19 @@ class TodoListUseCase extends UseCase<TodoListEntity> {
       entity = entity.copyWith(status: TodoListStatus.loading);
     }
 
-    List<TodoModel> temp = [];
-    // for (var i = 0; i < 5; i++) {
-    //   temp.add(
-    //     TodoModel(
-    //       id: '$i',
-    //       title: 'title $i',
-    //       description: 'description $i',
-    //       isCompleted: false,
-    //       createdAt: '',
-    //       updatedAt: '',
-    //     ),
-    //   );
-    // }
-    Future.delayed(const Duration(seconds: 2), () {
-      entity = entity.copyWith(
-        todoList: temp.toList(growable: false),
-        status: TodoListStatus.loaded,
-        isRefresh: isRefresh,
-      );
-    });
+    request<TodoReadSuccessInput>(
+      TodoReadGatewayOutput(),
+      onSuccess: (success) {
+        return entity = entity.copyWith(
+          todoList: success.todoList.toList(),
+          status: TodoListStatus.loaded,
+          isRefresh: isRefresh,
+        );
+      },
+      onFailure: (failure) => entity.copyWith(
+        status: TodoListStatus.failed,
+      ),
+    );
     if (isRefresh) {
       entity = entity.copyWith(isRefresh: false, status: TodoListStatus.loaded);
     }
@@ -48,21 +43,29 @@ class TodoListUseCase extends UseCase<TodoListEntity> {
     entity = entity.copyWith(
       status: TodoListStatus.loading,
     );
-    final temp = entity.todoList.toList(growable: true);
-    temp.removeWhere((element) => element.id == id);
 
-    Future.delayed(const Duration(seconds: 2), () {
-      entity = entity.copyWith(
-        todoList: temp.toList(growable: false),
-        status: TodoListStatus.loaded,
-        isDeleted: true,
-      );
-      Future.delayed(const Duration(seconds: 2), () {
-        entity = entity.copyWith(
-          isDeleted: false,
+    request<TodoDeleteSuccessInput>(
+      TodoDeleteGatewayOutput(id: id),
+      onSuccess: (success) {
+        final temp = entity.todoList.toList(growable: true);
+        temp.removeWhere((element) => element.id == id);
+
+        Future.delayed(const Duration(seconds: 3), () {
+          entity = entity.copyWith(
+            isDeleted: false,
+          );
+        });
+
+        return entity = entity.copyWith(
+          todoList: temp.toList(growable: false),
+          status: TodoListStatus.loaded,
+          isDeleted: true,
         );
-      });
-    });
+      },
+      onFailure: (failure) => entity.copyWith(
+        status: TodoListStatus.failed,
+      ),
+    );
   }
 }
 

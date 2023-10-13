@@ -1,19 +1,10 @@
 import 'package:clean_framework/clean_framework.dart';
-
-import '/src/features/splash/domain/splash_entity.dart';
+import '../../todoForm/providers/todo_form_use_case_providers.dart';
+import '../domain/todo_list_use_case.dart';
 import '/src/features/todoList/domain/todo_list_entity.dart';
 import '/src/features/todoList/model/todo_model.dart';
 
-import '../features/splash/domain/splash_use_case.dart';
-import '../features/todoForm/providers/todo_form_providers.dart';
-import '../features/todoList/domain/todo_list_use_case.dart';
-
-final splashUseCaseProvider =
-    UseCaseProvider.autoDispose<SplashEntity, SplashUseCase>(
-  SplashUseCase.new,
-);
-
-final todoListAutoUseCaseProvider =
+final todoListUseCaseProvider =
     UseCaseProvider.autoDispose<TodoListEntity, TodoListUseCase>(
   TodoListUseCase.new,
   (bridge) {
@@ -29,8 +20,8 @@ final todoListAutoUseCaseProvider =
               title: newEntity.title,
               description: newEntity.description,
               isCompleted: newEntity.isCompleted,
-              createdAt: '',
-              updatedAt: '');
+              createdAt: newEntity.createdAt,
+              updatedAt: newEntity.updatedAt);
           final isExist = tempList
               .where((element) => element.id == newEntity.id)
               .isNotEmpty;

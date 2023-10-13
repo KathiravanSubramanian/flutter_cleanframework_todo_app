@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../domain/todo_list_entity.dart';
 import '../domain/todo_list_ui_output.dart';
 import '../domain/todo_list_use_case.dart';
-import '../../../providers/todo_use_case_providers.dart';
+import '../providers/todo_list_use_case_providers.dart';
 import 'todo_list_view_model.dart';
 
 class TodoListPresenter
@@ -11,7 +11,7 @@ class TodoListPresenter
   TodoListPresenter({
     super.key,
     required super.builder,
-  }) : super(provider: todoListAutoUseCaseProvider);
+  }) : super(provider: todoListUseCaseProvider);
 
   @override
   TodoListViewModel createViewModel(

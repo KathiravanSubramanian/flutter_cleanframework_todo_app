@@ -2,11 +2,11 @@ import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:flutter/material.dart';
 
-import '../../../providers/todo_use_case_providers.dart';
 import '../../../routes/routes.dart';
 import '../domain/splash_ui_output.dart';
 import '../domain/splash_use_case.dart';
 
+import '../providers/splash_use_case_providers.dart';
 import 'splash_view_model.dart';
 
 class SplashPresenter

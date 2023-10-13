@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:clean_framework/clean_framework.dart';
 
 import 'todo_form_entity.dart';
@@ -9,6 +8,8 @@ class TodoFormUIOutput extends Output {
   final String title;
   final String description;
   final bool isCompleted;
+  final String createdAt;
+  final String updatedAt;
   final FormController formController;
 
   const TodoFormUIOutput({
@@ -16,6 +17,8 @@ class TodoFormUIOutput extends Output {
     this.title = '',
     this.description = '',
     this.isCompleted = false,
+    this.createdAt = '',
+    this.updatedAt = '',
     this.status = TodoFormStatus.initial,
     required this.formController,
   });
@@ -27,6 +30,8 @@ class TodoFormUIOutput extends Output {
         title,
         description,
         isCompleted,
+        createdAt,
+        updatedAt,
         formController,
       ];
 }
