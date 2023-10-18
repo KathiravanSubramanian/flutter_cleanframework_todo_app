@@ -1,3 +1,4 @@
+import 'package:clean_framework/clean_framework.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter_cleanframework_todo_app/src/features/todoForm/domain/todo_form_entity.dart';
 import 'package:flutter_cleanframework_todo_app/src/features/todoForm/domain/todo_form_ui_output.dart';
@@ -8,37 +9,56 @@ import 'package:flutter_cleanframework_todo_app/src/features/todoForm/providers/
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('TodoFormPresenter tests |', () {
+  group('TodoFormPresenter tests ', () {
+    Map<String, dynamic> inputType = {
+      'id': '',
+      'title': '',
+      'description': '',
+      'isCompleted': false
+    };
     presenterTest<TodoFormViewModel, TodoFormUIOutput, TodoFormUseCase>(
-      'creates proper view model',
-      create: (builder) => TodoFormPresenter(
-        builder: builder,
-        inputType: const {},
-      ),
+      'Create Form view model',
+      create: (builder) =>
+          TodoFormPresenter(builder: builder, inputType: inputType),
       overrides: [
         todoFormUseCaseProvider.overrideWith(TodoFormUseCaseFake()),
       ],
       setup: (useCase) {
         useCase.debugEntityUpdate(
           (e) => e.copyWith(
-            title: 'welcome',
-          ),
+              id: inputType['id'],
+              title: inputType['title'],
+              description: inputType['description'],
+              isCompleted: inputType['isCompleted'],
+              updatedAt: '',
+              createdAt: '',
+              status: TodoFormStatus.initial,
+              formController: FormController()),
         );
       },
-      // expect: () => [
-      //   isA<TodoFormViewModel>().having((vm) => vm.isLoading, false, false),
-      // ],
+      expect: () => [
+        isA<TodoFormViewModel>()
+            .having((vm) => vm.isLoading, 'Loading check', false),
+      ],
     );
   });
 }
 
-class TodoFormUseCaseFake extends TodoFormUseCase {}
+class TodoFormUseCaseFake extends TodoFormUseCase {
+  @override
+  Future<void> createTodo() async {}
+  @override
+  Future<void> updateById(String id) async {}
+}
 
-class TodoListUseCaseMock extends UseCaseMock<TodoFormEntity>
+class TodoFormUseCaseMock extends UseCaseMock<TodoFormEntity>
     implements TodoFormUseCase {
-  TodoListUseCaseMock()
+  TodoFormUseCaseMock()
       : super(
           entity: const TodoFormEntity(),
-          transformers: [TodoFormUIOutputTransformer()],
+          transformers: [
+            TodoFormUIOutputTransformer(),
+            TodoFormInputTransformer(),
+          ],
         );
 }
