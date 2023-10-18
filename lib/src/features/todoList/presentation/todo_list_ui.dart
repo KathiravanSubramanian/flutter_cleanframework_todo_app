@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../../../core/core.dart';
 import '../../../routes/routes.dart';
+import '../../features.dart';
 import '../widgets/todo_card.dart';
 import 'todo_list_presenter.dart';
 import 'todo_list_view_model.dart';
@@ -28,10 +29,15 @@ class TodoListUI extends UI<TodoListViewModel> {
             todoList(viewModel, context),
             if (viewModel.isLoading)
               Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  color: Colors.white.withOpacity(0.5),
-                  child: const Center(child: CircularProgressIndicator()))
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Colors.white.withOpacity(0.5),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            if (viewModel.hasFailedLoading)
+              LoadingFailed(onRetry: viewModel.onRetry),
           ],
         ),
         floatingActionButton: FloatingActionButton(

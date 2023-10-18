@@ -20,7 +20,7 @@ class ProjectRouter extends AppRouter<Routes> {
                   route: Routes.todoForm,
                   builder: (_, state) {
                     return TodoFormUI(
-                        selectedTodo: state.extra as Map<String, dynamic>);
+                        inputType: state.extra as Map<String, dynamic>);
                   },
                 ),
               ],

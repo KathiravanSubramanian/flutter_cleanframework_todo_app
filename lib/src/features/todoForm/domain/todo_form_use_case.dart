@@ -7,24 +7,23 @@ import 'todo_form_ui_output.dart';
 class TodoFormUseCase extends UseCase<TodoFormEntity> {
   TodoFormUseCase()
       : super(
-          entity: TodoFormEntity(
-            formController: FormController(
-              validators: {const InputFieldValidator.required()},
-            ),
-          ),
+          entity: const TodoFormEntity(),
           transformers: [
             TodoFormUIOutputTransformer(),
             TodoFormInputTransformer(),
           ],
         ) {
-    _titleController = TextFieldController.create(entity.formController,
-        tag: TodoFormTags.title);
-    _descriptionController = TextFieldController.create(entity.formController,
+    _titleController =
+        TextFieldController.create(todoFormController, tag: TodoFormTags.title);
+    _descriptionController = TextFieldController.create(todoFormController,
         tag: TodoFormTags.description);
   }
 
   late final TextFieldController _titleController;
   late final TextFieldController _descriptionController;
+  final todoFormController = FormController(
+    validators: {const InputFieldValidator.required()},
+  );
 
   Future<void> loadData(Map<String, dynamic> todo) async {
     _titleController.setValue(todo['title']);
@@ -32,9 +31,8 @@ class TodoFormUseCase extends UseCase<TodoFormEntity> {
   }
 
   Future<void> createTodo() async {
-    final formController = entity.formController;
-    if (formController.validate()) {
-      formController.setSubmitted(true);
+    if (todoFormController.validate()) {
+      todoFormController.setSubmitted(true);
       entity = entity.copyWith(
         status: TodoFormStatus.loading,
       );
@@ -44,10 +42,10 @@ class TodoFormUseCase extends UseCase<TodoFormEntity> {
             description: _descriptionController.value ?? '',
             isCompleted: false),
         onSuccess: (success) {
-          formController.setSubmitted(false);
+          todoFormController.setSubmitted(false);
           _titleController.setValue('');
           _descriptionController.setValue('');
-          formController.reset();
+          todoFormController.reset();
           return entity = entity.copyWith(
             id: success.id,
             title: success.title,
@@ -66,9 +64,8 @@ class TodoFormUseCase extends UseCase<TodoFormEntity> {
   }
 
   Future<void> updateById(String id) async {
-    final formController = entity.formController;
-    if (formController.validate()) {
-      formController.setSubmitted(true);
+    if (todoFormController.validate()) {
+      todoFormController.setSubmitted(true);
       entity = entity.copyWith(
         status: TodoFormStatus.loading,
       );
@@ -80,7 +77,7 @@ class TodoFormUseCase extends UseCase<TodoFormEntity> {
             description: _descriptionController.value ?? '',
             isCompleted: false),
         onSuccess: (success) {
-          formController.setSubmitted(false);
+          todoFormController.setSubmitted(false);
           return entity = entity.copyWith(
             id: success.id,
             title: success.title,
@@ -100,7 +97,7 @@ class TodoFormUseCase extends UseCase<TodoFormEntity> {
 
   @override
   void dispose() {
-    entity.formController.dispose();
+    todoFormController.dispose();
     super.dispose();
   }
 }
@@ -117,7 +114,6 @@ class TodoFormUIOutputTransformer
       isCompleted: entity.isCompleted,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
-      formController: entity.formController,
     );
   }
 }

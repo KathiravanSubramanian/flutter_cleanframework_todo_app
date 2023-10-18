@@ -19,8 +19,7 @@ class TodoDeleteGateway extends Gateway<TodoDeleteGatewayOutput,
   TodoDeleteSuccessInput onSuccess(JsonHttpSuccessResponse response) {
     final deserializer = Deserializer(response.data);
     return TodoDeleteSuccessInput(
-      todo: TodoModel.fromJson(deserializer.getMap('data')),
-    );
+        todo: TodoIdentity.fromJson(deserializer.getMap('data')));
   }
 }
 
@@ -36,7 +35,7 @@ class TodoDeleteGatewayOutput extends Output {
 class TodoDeleteSuccessInput extends SuccessInput {
   const TodoDeleteSuccessInput({required this.todo});
 
-  final TodoModel todo;
+  final TodoIdentity todo;
 }
 
 class TodoDeleteRequest extends DeleteHttpRequest {

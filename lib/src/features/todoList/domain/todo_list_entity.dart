@@ -9,6 +9,7 @@ class TodoListEntity extends Entity {
 
   final bool isRefresh;
   final bool isDeleted;
+
   const TodoListEntity({
     this.todoList = const [],
     this.status = TodoListStatus.initial,

@@ -12,7 +12,6 @@ class TodoFormEntity extends Entity {
   final bool isCompleted;
   final String createdAt;
   final String updatedAt;
-  final FormController formController;
 
   const TodoFormEntity({
     this.id = '',
@@ -22,7 +21,6 @@ class TodoFormEntity extends Entity {
     this.isCompleted = false,
     this.createdAt = '',
     this.updatedAt = '',
-    required this.formController,
   });
 
   @override
@@ -34,7 +32,6 @@ class TodoFormEntity extends Entity {
         isCompleted,
         createdAt,
         updatedAt,
-        formController,
       ];
 
   @override
@@ -56,7 +53,6 @@ class TodoFormEntity extends Entity {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       status: status ?? this.status,
-      formController: formController ?? this.formController,
     );
   }
 }

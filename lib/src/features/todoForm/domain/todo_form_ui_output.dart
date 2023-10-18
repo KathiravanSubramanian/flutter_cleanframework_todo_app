@@ -10,7 +10,6 @@ class TodoFormUIOutput extends Output {
   final bool isCompleted;
   final String createdAt;
   final String updatedAt;
-  final FormController formController;
 
   const TodoFormUIOutput({
     this.id = '',
@@ -20,7 +19,6 @@ class TodoFormUIOutput extends Output {
     this.createdAt = '',
     this.updatedAt = '',
     this.status = TodoFormStatus.initial,
-    required this.formController,
   });
 
   @override
@@ -32,6 +30,5 @@ class TodoFormUIOutput extends Output {
         isCompleted,
         createdAt,
         updatedAt,
-        formController,
       ];
 }

@@ -11,15 +11,15 @@ class TodoFormPresenter
   TodoFormPresenter({
     super.key,
     required super.builder,
-    required this.selectedTodo,
+    required this.inputType,
   }) : super(provider: todoFormUseCaseProvider);
 
-  final Map<String, dynamic> selectedTodo;
+  final Map<String, dynamic> inputType;
 
   @override
   void onLayoutReady(BuildContext context, TodoFormUseCase useCase) {
-    if (selectedTodo['id'] != '') {
-      useCase.loadData(selectedTodo);
+    if (inputType['id'] != '') {
+      useCase.loadData(inputType);
     }
   }
 
@@ -29,7 +29,7 @@ class TodoFormPresenter
     return TodoFormViewModel(
       isLoading: output.status == TodoFormStatus.loading,
       hasFailedLoading: output.status == TodoFormStatus.failed,
-      formController: output.formController,
+      formController: useCase.todoFormController,
       updateById: (id) => useCase.updateById(id),
       createTodo: () => useCase.createTodo(),
     );
@@ -38,7 +38,7 @@ class TodoFormPresenter
   @override
   void onOutputUpdate(BuildContext context, TodoFormUIOutput output) {
     if (output.status == TodoFormStatus.failed) {
-      selectedTodo['id'] == ''
+      inputType['id'] == ''
           ? showSnackbar('Sorry, failed to create todo!', context)
           : showSnackbar('Sorry, failed to update todo!', context);
     }
@@ -50,7 +50,7 @@ class TodoFormPresenter
         builder: (context) {
           return AlertDialog(
             title: const Text('Todo'),
-            content: Text(selectedTodo['id'] == ''
+            content: Text(inputType['id'] == ''
                 ? 'Has been added successfully'
                 : 'Has been updated successfully'),
             actions: [

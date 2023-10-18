@@ -54,7 +54,7 @@ class TodoUpdateSuccessInput extends SuccessInput {
   final bool isCompleted;
   final String createdAt;
   final String updatedAt;
-  const TodoUpdateSuccessInput({
+  TodoUpdateSuccessInput({
     required this.id,
     required this.title,
     required this.description,

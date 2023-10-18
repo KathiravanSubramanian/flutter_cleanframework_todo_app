@@ -21,22 +21,37 @@ class TodoListUseCase extends UseCase<TodoListEntity> {
       entity = entity.copyWith(status: TodoListStatus.loading);
     }
 
-    request<TodoReadSuccessInput>(
-      TodoReadGatewayOutput(),
-      onSuccess: (success) {
-        return entity = entity.copyWith(
-          todoList: success.todoList.toList(),
+    final input = await getInput(TodoReadGatewayOutput());
+    switch (input) {
+      case Success(:TodoReadSuccessInput input):
+        final todos = input.todoIdentities.map(_resolveTodo);
+
+        entity = entity.copyWith(
+          todoList: todos.toList(growable: false),
           status: TodoListStatus.loaded,
           isRefresh: isRefresh,
         );
-      },
-      onFailure: (failure) => entity.copyWith(
-        status: TodoListStatus.failed,
-      ),
-    );
+      case _:
+        entity = entity.copyWith(
+          status: TodoListStatus.failed,
+          isRefresh: isRefresh,
+        );
+    }
+
     if (isRefresh) {
       entity = entity.copyWith(isRefresh: false, status: TodoListStatus.loaded);
     }
+  }
+
+  TodoModel _resolveTodo(TodoIdentity todo) {
+    return TodoModel(
+      id: todo.id,
+      title: todo.title,
+      description: todo.description,
+      isCompleted: todo.isCompleted,
+      createdAt: todo.createdAt,
+      updatedAt: todo.updatedAt,
+    );
   }
 
   Future<void> deleteById(String id) async {

@@ -6,15 +6,15 @@ import 'todo_form_presenter.dart';
 import 'todo_form_view_model.dart';
 
 class TodoFormUI extends UI<TodoFormViewModel> {
-  TodoFormUI({super.key, required this.selectedTodo});
+  TodoFormUI({super.key, required this.inputType});
 
-  final Map<String, dynamic> selectedTodo;
+  final Map<String, dynamic> inputType;
 
   @override
   TodoFormPresenter create(WidgetBuilder builder) {
     return TodoFormPresenter(
       builder: builder,
-      selectedTodo: selectedTodo,
+      inputType: inputType,
     );
   }
 
@@ -22,7 +22,7 @@ class TodoFormUI extends UI<TodoFormViewModel> {
   Widget build(BuildContext context, TodoFormViewModel viewModel) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(selectedTodo['id'] == '' ? 'Add' : 'Edit'),
+        title: Text(inputType['id'] == '' ? 'Add' : 'Edit'),
         centerTitle: false,
       ),
       body: Stack(
@@ -49,14 +49,13 @@ class TodoFormUI extends UI<TodoFormViewModel> {
                       const SizedBox(height: 20),
                       FormButton(
                         onPressed: () {
-                          if (selectedTodo['id'] == '') {
+                          if (inputType['id'] == '') {
                             viewModel.createTodo();
                           } else {
-                            viewModel.updateById(selectedTodo['id']);
+                            viewModel.updateById(inputType['id']);
                           }
                         },
-                        child:
-                            Text(selectedTodo['id'] == '' ? 'Add' : 'Update'),
+                        child: Text(inputType['id'] == '' ? 'Add' : 'Update'),
                       ),
                     ],
                   ),

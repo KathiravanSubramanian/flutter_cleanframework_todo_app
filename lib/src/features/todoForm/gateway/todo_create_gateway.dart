@@ -52,7 +52,7 @@ class TodoCreateSuccessInput extends SuccessInput {
   final bool isCompleted;
   final String createdAt;
   final String updatedAt;
-  const TodoCreateSuccessInput({
+  TodoCreateSuccessInput({
     required this.id,
     required this.title,
     required this.description,

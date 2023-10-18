@@ -19,8 +19,8 @@ class TodoReadGateway extends Gateway<TodoReadGatewayOutput, TodoReadRequest,
   TodoReadSuccessInput onSuccess(JsonHttpSuccessResponse response) {
     final deserializer = Deserializer(response.data);
     return TodoReadSuccessInput(
-      todoList: deserializer.getList('items', converter: TodoModel.fromJson),
-    );
+        todoIdentities:
+            deserializer.getList('items', converter: TodoIdentity.fromJson));
   }
 }
 
@@ -30,9 +30,9 @@ class TodoReadGatewayOutput extends Output {
 }
 
 class TodoReadSuccessInput extends SuccessInput {
-  const TodoReadSuccessInput({required this.todoList});
+  const TodoReadSuccessInput({required this.todoIdentities});
 
-  final List<TodoModel> todoList;
+  final List<TodoIdentity> todoIdentities;
 }
 
 class TodoReadRequest extends GetHttpRequest {
