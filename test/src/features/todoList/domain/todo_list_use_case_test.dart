@@ -198,8 +198,8 @@ void _mockSuccess(TodoListUseCase useCase, String inputType) {
       (_) async {
         return Either.right(
           TodoReadSuccessInput(
-            todoIdentities: [
-              TodoIdentity(
+            todos: [
+              TodoModel(
                 id: '45',
                 title: 'welcome',
                 description: 'welcome 2',
@@ -207,7 +207,7 @@ void _mockSuccess(TodoListUseCase useCase, String inputType) {
                 createdAt: '',
                 updatedAt: '',
               ),
-              TodoIdentity(
+              TodoModel(
                 id: '25',
                 title: 'todo title',
                 description: 'todo description 2',
@@ -225,7 +225,7 @@ void _mockSuccess(TodoListUseCase useCase, String inputType) {
       (_) async {
         return Either.right(
           TodoDeleteSuccessInput(
-            todo: TodoIdentity(
+            todo: TodoModel(
               id: '45',
               title: 'welcome',
               description: 'welcome 2',

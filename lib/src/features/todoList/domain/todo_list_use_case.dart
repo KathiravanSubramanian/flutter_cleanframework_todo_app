@@ -24,10 +24,8 @@ class TodoListUseCase extends UseCase<TodoListEntity> {
     final input = await getInput(TodoReadGatewayOutput());
     switch (input) {
       case Success(:TodoReadSuccessInput input):
-        final todos = input.todoIdentities.map(_resolveTodo);
-
         entity = entity.copyWith(
-          todoList: todos.toList(growable: false),
+          todoList: input.todos.toList(growable: false),
           status: TodoListStatus.loaded,
           isRefresh: isRefresh,
         );
@@ -41,17 +39,6 @@ class TodoListUseCase extends UseCase<TodoListEntity> {
     if (isRefresh) {
       entity = entity.copyWith(isRefresh: false, status: TodoListStatus.loaded);
     }
-  }
-
-  TodoModel _resolveTodo(TodoIdentity todo) {
-    return TodoModel(
-      id: todo.id,
-      title: todo.title,
-      description: todo.description,
-      isCompleted: todo.isCompleted,
-      createdAt: todo.createdAt,
-      updatedAt: todo.updatedAt,
-    );
   }
 
   Future<void> deleteById(String id) async {

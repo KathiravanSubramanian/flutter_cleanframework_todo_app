@@ -37,28 +37,10 @@ class TodoModel {
       isCompleted.hashCode ^
       createdAt.hashCode ^
       updatedAt.hashCode;
-}
 
-class TodoIdentity {
-  TodoIdentity({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.isCompleted,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  final String id;
-  final String title;
-  final String description;
-  final bool isCompleted;
-  final String createdAt;
-  final String updatedAt;
-
-  factory TodoIdentity.fromJson(Map<String, dynamic> json) {
+  factory TodoModel.fromJson(Map<String, dynamic> json) {
     final deserializer = Deserializer(json);
-    return TodoIdentity(
+    return TodoModel(
       id: deserializer.getString('_id'),
       title: deserializer.getString('title'),
       description: deserializer.getString('description'),

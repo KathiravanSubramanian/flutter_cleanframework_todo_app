@@ -40,7 +40,7 @@ void main() {
       final input = await gateway.buildInput(TodoReadGatewayOutput());
 
       expect(input.isRight, isTrue);
-      final todoList = input.right.todoIdentities;
+      final todoList = input.right.todos;
       expect(todoList.first.id, equals('45'));
       expect(todoList.first.title, equals('welcome'));
       expect(todoList.first.description, equals('welcome 2'));
