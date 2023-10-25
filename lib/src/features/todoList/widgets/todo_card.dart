@@ -78,7 +78,7 @@ class TodoCard extends StatelessWidget {
                   viewModel.deleteById(todo.id);
                   Navigator.of(context).pop();
                 },
-                child: const Text('Delete'),
+                child: const Text('Delete Item'),
               ),
             ],
           );

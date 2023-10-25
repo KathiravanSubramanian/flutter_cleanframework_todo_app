@@ -1,3 +1,4 @@
+import 'package:clean_framework_router/clean_framework_router.dart';
 import 'package:clean_framework_test/clean_framework_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cleanframework_todo_app/src/features/todoList/model/todo_model.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_cleanframework_todo_app/src/features/todoList/presentati
 import 'package:flutter_cleanframework_todo_app/src/features/todoList/presentation/todo_list_view_model.dart';
 import 'package:flutter_cleanframework_todo_app/src/features/todoList/widgets/todo_card.dart';
 import 'package:flutter_cleanframework_todo_app/src/features/widgets/app_scope.dart';
+import 'package:flutter_cleanframework_todo_app/src/routes/routes.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -26,6 +28,14 @@ void main() {
       updatedAt: '',
     ),
   ];
+  final vm = TodoListViewModel(
+    todoList: todoList,
+    isLoading: false,
+    hasFailedLoading: false,
+    onRetry: () {},
+    onRefresh: () async {},
+    deleteById: (String value) {},
+  );
   group('TodoListUI tests |', () {
     uiTest(
       'shows todo list correctly',
@@ -87,22 +97,13 @@ void main() {
         );
       },
       ui: TodoListUI(),
-      viewModel: TodoListViewModel(
-        todoList: todoList,
-        isLoading: false,
-        hasFailedLoading: false,
-        onRetry: () {},
-        onRefresh: () async {},
-        deleteById: (String value) {},
-      ),
+      viewModel: vm,
       verify: (tester) async {
         await tester.pumpAndSettle();
-
         final todoCardFinder = find.descendant(
           of: find.byType(TodoCard),
           matching: find.text('welcome'),
         );
-
         expect(todoCardFinder, findsOneWidget);
 
         await tester.pumpAndSettle();
@@ -141,24 +142,16 @@ void main() {
     );
 
     uiTest(
-      'Cancel alert dialog from the Delete the item',
+      'Cancel alert dialog delete the item from the list',
       builder: (context, child) {
         return AppScope(
           child: child,
         );
       },
       ui: TodoListUI(),
-      viewModel: TodoListViewModel(
-        todoList: todoList,
-        isLoading: false,
-        hasFailedLoading: false,
-        onRetry: () {},
-        onRefresh: () async {},
-        deleteById: (String value) {},
-      ),
+      viewModel: vm,
       verify: (tester) async {
         await tester.pumpAndSettle();
-
         final todoCardFinder = find.descendant(
           of: find.byType(TodoCard),
           matching: find.text('welcome'),
@@ -200,4 +193,64 @@ void main() {
       },
     );
   });
+
+  uiTest(
+    'Edit the item from the list',
+    builder: (context, child) {
+      return AppScope(
+        child: child,
+      );
+    },
+    ui: TodoListUI(),
+    viewModel: vm,
+    verify: (tester) async {
+      await tester.pumpAndSettle();
+      final todoCardFinder = find.descendant(
+        of: find.byType(TodoCard),
+        matching: find.text('welcome'),
+      );
+      expect(todoCardFinder, findsOneWidget);
+
+      await tester.pumpAndSettle();
+
+      final listItem = find.widgetWithText(ListTile, 'welcome');
+
+      expect(listItem, findsOneWidget);
+      await tester.pump();
+
+      expect(find.byType(ListTile), findsNWidgets(2));
+
+      await tester.tap(find.byType(PopupMenuButton<String>).first);
+      await tester.pumpAndSettle();
+      expect(find.text('Edit'), findsOneWidget);
+      expect(find.text('Delete'), findsOneWidget);
+      await tester.tap(find.text('Edit'));
+      await tester.pump();
+
+      final routeData = tester.routeData!;
+      expect(routeData.route, Routes.todoForm);
+      expect(
+          routeData.extra,
+          equals({
+            'id': '45',
+            'title': 'welcome',
+            'description': 'welcome 2',
+            'isCompleted': false
+          }));
+
+      tester.element(find.byType(MaterialApp)).router.pop();
+      await tester.pumpAndSettle();
+
+      final poppedRouteData = tester.poppedRouteData!;
+      expect(poppedRouteData.route, Routes.todoForm);
+      expect(
+          poppedRouteData.extra,
+          equals({
+            'id': '45',
+            'title': 'welcome',
+            'description': 'welcome 2',
+            'isCompleted': false
+          }));
+    },
+  );
 }

@@ -53,6 +53,50 @@ void main() {
     );
 
     presenterTest<TodoListViewModel, TodoListUIOutput, TodoListUseCase>(
+      'shows success snack bar if delete fails',
+      create: (builder) => TodoListPresenter(builder: builder),
+      overrides: [
+        todoListUseCaseProvider.overrideWith(TodoListUseCaseFake()),
+      ],
+      setup: (useCase) {
+        useCase.debugEntityUpdate(
+          (e) => e.copyWith(
+            isDeleted: true,
+            status: TodoListStatus.failed,
+          ),
+        );
+      },
+      verify: (tester) {
+        expect(
+          find.text('Sorry, failed to delete this todo!'),
+          findsOneWidget,
+        );
+      },
+    );
+
+    presenterTest<TodoListViewModel, TodoListUIOutput, TodoListUseCase>(
+      'shows failure snack bar if delete success',
+      create: (builder) => TodoListPresenter(builder: builder),
+      overrides: [
+        todoListUseCaseProvider.overrideWith(TodoListUseCaseFake()),
+      ],
+      setup: (useCase) {
+        useCase.debugEntityUpdate(
+          (e) => e.copyWith(
+            isDeleted: true,
+            status: TodoListStatus.loaded,
+          ),
+        );
+      },
+      verify: (tester) {
+        expect(
+          find.text('Deleted successfully!'),
+          findsOneWidget,
+        );
+      },
+    );
+
+    presenterTest<TodoListViewModel, TodoListUIOutput, TodoListUseCase>(
       'shows success snack bar if refreshing fails',
       create: (builder) => TodoListPresenter(builder: builder),
       overrides: [
@@ -107,6 +151,20 @@ void main() {
         vm.onRefresh();
 
         verify(() => useCase.fetchData(isRefresh: true));
+      },
+    );
+
+    presenterCallbackTest<TodoListViewModel, TodoListUIOutput, TodoListUseCase>(
+      'calls deleteById in use case',
+      useCase: TodoListUseCaseMock(),
+      create: (builder) => TodoListPresenter(builder: builder),
+      setup: (useCase) {
+        when(() => useCase.deleteById('45')).thenAnswer((_) async {});
+      },
+      verify: (useCase, vm) {
+        vm.deleteById('45');
+
+        verify(() => useCase.deleteById('45'));
       },
     );
   });

@@ -16,6 +16,13 @@ void main() {
       'description': '',
       'isCompleted': false
     };
+
+    Map<String, dynamic> inputTypeWithData = {
+      'id': '45',
+      'title': 'welcome',
+      'description': 'welcome description',
+      'isCompleted': false
+    };
     presenterTest<TodoFormViewModel, TodoFormUIOutput, TodoFormUseCase>(
       'Create Form view model',
       create: (builder) =>
@@ -41,10 +48,57 @@ void main() {
             .having((vm) => vm.isLoading, 'Loading check', false),
       ],
     );
+
+    presenterTest<TodoFormViewModel, TodoFormUIOutput, TodoFormUseCase>(
+      'shows failure snack bar if create fails',
+      create: (builder) =>
+          TodoFormPresenter(builder: builder, inputType: inputType),
+      overrides: [
+        todoFormUseCaseProvider.overrideWith(TodoFormUseCaseFake()),
+      ],
+      setup: (useCase) {
+        useCase.debugEntityUpdate(
+          (e) => e.copyWith(
+            status: TodoFormStatus.failed,
+          ),
+        );
+      },
+      verify: (tester) {
+        expect(
+          find.text('Sorry, failed to create todo!'),
+          findsOneWidget,
+        );
+      },
+    );
+
+    presenterTest<TodoFormViewModel, TodoFormUIOutput, TodoFormUseCase>(
+      'shows failure snack bar if update fails',
+      create: (builder) =>
+          TodoFormPresenter(builder: builder, inputType: inputTypeWithData),
+      overrides: [
+        todoFormUseCaseProvider.overrideWith(TodoFormUseCaseFake()),
+      ],
+      setup: (useCase) {
+        useCase.debugEntityUpdate(
+          (e) => e.copyWith(
+            status: TodoFormStatus.failed,
+          ),
+        );
+      },
+      verify: (tester) {
+        expect(
+          find.text('Sorry, failed to update todo!'),
+          findsOneWidget,
+        );
+      },
+    );
   });
 }
 
 class TodoFormUseCaseFake extends TodoFormUseCase {
+  @override
+  Future<void> loadData(Map<String, dynamic> todo) async {}
+
   @override
   Future<void> createTodo() async {}
   @override

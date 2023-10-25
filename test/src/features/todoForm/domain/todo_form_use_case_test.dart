@@ -79,6 +79,12 @@ void main() {
         'update; failure',
         provider: todoFormUseCaseProvider,
         execute: (useCase) {
+          useCase.loadData({
+            'id': '45',
+            'title': 'title',
+            'description': 'description',
+            'isCompleted': false,
+          });
           _mockFailure(useCase, 'update');
           return useCase.updateById('45');
         },
